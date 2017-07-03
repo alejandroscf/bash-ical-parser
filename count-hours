@@ -1,0 +1,43 @@
+#!/bin/bash
+
+if [[ $# -lt 2 ]]
+    then echo "Usage:"
+    echo "   $0 startdate endate [option]"
+    echo "   $0 "2017-06-01" "2017-07-01" [option]"
+    echo ""
+    echo "   Options:"
+    echo "      --total (default)"
+    echo "      --csv (not implemented)"
+    echo ""
+    echo "   Input stracture:"
+    echo "      starttime endtime text"
+    echo "         starttime and endtime are linux epochs"
+    
+
+    exit 0
+fi
+
+
+total=0;
+
+echo Desde:
+date -d "$1" 
+echo Hasta:
+date -d "$2" 
+echo '######################'
+
+while read start end text;
+    do 
+    if [[ $start -gt $(date -d "$1" +%s) && $start -le $(date -d "$2" +%s) ]]; 
+        then
+        duration=$(( $end - $start ));
+        total=$(( $total + $duration ))
+        echo "$text"
+        echo "$(date -d @$start +%x)"
+        echo "de $(date -d @$start +%R) a $(date -d @$end +%R)"
+        echo "  duracion $duration s = $(echo scale=2\; $duration/3600 |bc -l ) h"
+        echo "      $total s = $(echo scale=2\; $total/3600 |bc -l ) h"
+        #date -d @$total "+%j dias %H horas %M "
+        echo 
+    fi
+done;
